@@ -1,2 +1,2 @@
 -- Update the timezone
-SET GLOBAL time_zone = 'America/Los_Angeles';
+SET GLOBAL time_zone = 'Europe/Berlin';

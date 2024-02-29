@@ -1,4 +1,5 @@
-FROM php:8.2-apache-buster
+#FROM php:8.2-apache-buster
+FROM php:7.4-apache-buster
 
 ## https://hub.docker.com/_/php/tags?page=1&name=apache
 
@@ -22,9 +23,9 @@ RUN apt-get update -qq && \
     && docker-php-ext-enable imagick \
 # INSTALL MYSQLI AND OTHER DOCKER FUN
     && docker-php-ext-install gd zip mysqli \
-# INSTALL XDEBUG
-    && pecl install xdebug \
-    && echo "zend_extension=$(find /usr/local/lib/php/extensions/ -name xdebug.so)" > "/usr/local/etc/php/conf.d/xdebug.ini" \
+# INSTALL XDEBUG - WORKS WITH PHP 8
+#    && pecl install xdebug \
+#    && echo "zend_extension=$(find /usr/local/lib/php/extensions/ -name xdebug.so)" > "/usr/local/etc/php/conf.d/xdebug.ini" \
 ### cleanup
     && rm -r /var/lib/apt/lists/*
 
