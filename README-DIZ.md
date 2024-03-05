@@ -14,4 +14,7 @@
        back
     2. Redcap version 14.2 has currently a bug at openid logout process which will result in a
        keycloak error message. this should be fixed at next redcap bug fix release. For detail check
-       out: https://redcap.vanderbilt.edu/community/post.php?id=224757 
+       out: https://redcap.vanderbilt.edu/community/post.php?id=224757
+3. Self-signed certificates
+    1.  Add `crt`-files into `.certificates` folder if you need them. 
+        They will be imported at container start. 

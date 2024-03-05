@@ -30,6 +30,7 @@ services:
       - ${WEBROOT_DIR}:/var/www/html
       - ${CREDENTIALS_DIR}:/var/credentials
       - ${LOGS_DIR}:/var/log/apache2
+      - ./certificates:/etc/container-config/ca-cert
     logging:
       options:
         max-size: "10m"
