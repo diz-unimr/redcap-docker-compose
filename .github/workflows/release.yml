@@ -36,7 +36,7 @@ jobs:
   docker-build-and-push:
     strategy:
       matrix:
-        context-path: [./rdc/docker-web, ./rdc/docker-mysql, ./rdc/docker-cron]
+        context-path: [rdc/docker-web, rdc/docker-mysql, rdc/docker-cron]
 
     name: Docker build & publish
     runs-on: ubuntu-latest
