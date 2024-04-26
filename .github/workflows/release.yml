@@ -34,6 +34,10 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.SEMANTIC_RELEASE_TOKEN }}
 
   docker-build-and-push:
+    strategy:
+      matrix:
+        context-path: [./rdc/docker-web, ./rdc/docker-mysql, ./rdc/docker-cron]
+
     name: Docker build & publish
     runs-on: ubuntu-latest
     permissions:
@@ -61,7 +65,7 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
-          context: .
+          context: ${{ matrix.context-path }}
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
