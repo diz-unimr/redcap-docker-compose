@@ -10,9 +10,17 @@ permissions: read-all
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
 
 jobs:
+  generate-name:
+    runs-on: ubuntu-latest
+    outputs:
+      IMAGE_NAME: ${{ env.IMAGE_NAME }}
+    steps:
+      - name: Create output
+        run: |
+          echo "IMAGE_NAME= ${{ env.REGISTRY }}/${{ github.repository_owner }}/redcap" >> $GITHUB_OUTPUT
+
   semantic-release:
     name: Semantic release
     runs-on: ubuntu-latest
@@ -34,15 +42,21 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.SEMANTIC_RELEASE_TOKEN }}
 
   docker-build-and-push:
-    strategy:
-      matrix:
-        context-path: [rdc/docker-web, rdc/docker-mysql, rdc/docker-cron]
-
     name: Docker build & publish
     runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
+    needs: generate-name
+    strategy:
+      matrix:
+        include:
+          - path: rdc/docker-web
+            name: ${{ needs.generate-name.outputs.IMAGE_NAME }}-web
+          - path: rdc/docker-mysql
+            name: ${{ needs.generate-name.outputs.IMAGE_NAME }}-mysql
+          - path: rdc/docker-cron
+            name: ${{ needs.generate-name.outputs.IMAGE_NAME }}-cron
 
     steps:
       - name: Log in to the Container registry
@@ -56,7 +70,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          images: ${{ matrix.name }}
           tags: |
             type=semver,pattern={{version}}
             # set latest tag for default branch
@@ -65,7 +79,7 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
-          context: "{{defaultContext}}:${{ matrix.context-path }}"
+          context: "{{defaultContext}}:${{ matrix.path }}"
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
