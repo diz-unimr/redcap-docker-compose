@@ -19,7 +19,7 @@ jobs:
     steps:
       - name: Create output
         run: |
-          echo "IMAGE_NAME= ${{ env.REGISTRY }}/${{ github.repository_owner }}/redcap" >> $GITHUB_OUTPUT
+          echo "IMAGE_NAME=${{ env.REGISTRY }}/${{ github.repository_owner }}/redcap" >> $GITHUB_OUTPUT
 
   semantic-release:
     name: Semantic release
